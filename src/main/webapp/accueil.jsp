@@ -6,9 +6,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
   <title>Accueil</title>
 </head>
 <body>
+
 <h1>Liste des CONTACTS :</h1>
 <table border="2">
   <tr>
@@ -36,7 +38,10 @@
 </table>
 
 <form action="addContact.jsp">
+
   <input type="submit" value="Ajouter un contact">
+
 </form>
+
 </body>
 </html>

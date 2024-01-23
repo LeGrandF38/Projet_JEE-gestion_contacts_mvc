@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Supprimer un contact</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <h1>Supprimer un contact</h1>
