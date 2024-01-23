@@ -19,11 +19,49 @@ public class Contact implements FacadeContact {
         this.PHONE = PHONE;
         this.ADDRESS = ADDRESS;
     }
-
+    //constructeur vide
     public Contact() {
-
+    }
+    //getter & setter
+    public int getID_CONTACT() {
+        return ID_CONTACT;
+    }
+    public void setID_CONTACT(int ID_CONTACT) {
+        this.ID_CONTACT = ID_CONTACT;
+    }
+    public String getFIRSTNAME() {
+        return FIRSTNAME;
+    }
+    public void setFIRSTNAME(String FIRSTNAME) {
+        this.FIRSTNAME = FIRSTNAME;
+    }
+    public String getLASTNAME() {
+        return LASTNAME;
+    }
+    public void setLASTNAME(String LASTNAME) {
+        this.LASTNAME = LASTNAME;
+    }
+    public String getEMAIL() {
+        return EMAIL;
+    }
+    public void setEMAIL(String EMAIL) {
+        this.EMAIL = EMAIL;
+    }
+    public String getPHONE() {
+        return PHONE;
+    }
+    public void setPHONE(String PHONE) {
+        this.PHONE = PHONE;
+    }
+    public String getADDRESS() {
+        return ADDRESS;
+    }
+    public void setADDRESS(String ADDRESS) {
+        this.ADDRESS = ADDRESS;
     }
 
+
+    // CRUD implementation/ implementation FacadeContact
     @Override
     public void createContact(Contact c) {
         try (Connection conn = ConnexionBD.getConnection();
@@ -34,16 +72,16 @@ public class Contact implements FacadeContact {
             stm.setString(3, c.getEMAIL());
             stm.setString(4, c.getPHONE());
             stm.setString(5, c.getADDRESS());
-            stm.setInt(6, c.getID_CONTACT());
 
             stm.executeUpdate();
-            System.out.println("Execution ok");
+            System.out.println("Exécution réussie");
         } catch (SQLException ex) {
             ex.printStackTrace();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public List<Contact> searchContacts(String keyword) {
         List<Contact> searchResults = new ArrayList<>();
@@ -80,58 +118,14 @@ public class Contact implements FacadeContact {
     }
 
 
-    public int getID_CONTACT() {
-        return ID_CONTACT;
-    }
 
-    public void setID_CONTACT(int ID_CONTACT) {
-        this.ID_CONTACT = ID_CONTACT;
-    }
 
-    public String getFIRSTNAME() {
-        return FIRSTNAME;
-    }
 
-    public void setFIRSTNAME(String FIRSTNAME) {
-        this.FIRSTNAME = FIRSTNAME;
-    }
-
-    public String getLASTNAME() {
-        return LASTNAME;
-    }
-
-    public void setLASTNAME(String LASTNAME) {
-        this.LASTNAME = LASTNAME;
-    }
-
-    public String getEMAIL() {
-        return EMAIL;
-    }
-
-    public void setEMAIL(String EMAIL) {
-        this.EMAIL = EMAIL;
-    }
-
-    public String getPHONE() {
-        return PHONE;
-    }
-
-    public void setPHONE(String PHONE) {
-        this.PHONE = PHONE;
-    }
-
-    public String getADDRESS() {
-        return ADDRESS;
-    }
-
-    public void setADDRESS(String ADDRESS) {
-        this.ADDRESS = ADDRESS;
-    }
 
     @Override
     public void deleteContact(int id) {
         try (Connection conn = ConnexionBD.getConnection();
-             PreparedStatement stm = conn.prepareStatement("DELETE FROM contacts WHERE ID_CONTACT = ?")) {
+             PreparedStatement stm = conn.prepareStatement("DELETE FROM contact WHERE ID_CONTACT = ?")) {
             stm.setInt(1, id);
             stm.executeUpdate();
             System.out.println("Execution ok");

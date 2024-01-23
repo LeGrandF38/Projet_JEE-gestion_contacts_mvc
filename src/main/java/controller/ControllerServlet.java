@@ -39,6 +39,11 @@ public class ControllerServlet extends HttpServlet {
         // RÉCUPÉRATION de L'ACTION À effectuer
         String do_this = request.getParameter("do_this"); // Utilisation de la méthode correcte getRequestParameter
 
+
+
+
+
+        //index(lister tous les contacts
         if (do_this == null) {
             // définir le contexte pour une redirection sur LA PAGE ACCUEIL.JSP
             ServletContext sc = getServletContext();
@@ -46,6 +51,11 @@ public class ControllerServlet extends HttpServlet {
             // CHARGER LA liste des CONTACTS DANS LA requête pour les TRANSMETTRE À LA JSP ACCUEIL.JSP (qui VA les AFFICHER)
             request.setAttribute("LISTCONTACTS", contactFacade.findAll()); // Utilisation de la variable contactFacade
             rd.forward(request, response);
+
+
+
+
+            //Suppreimer
         } else if (do_this.equals("delete")) {
             // RÉCUPÉRATION de l'id du CONTACT
             String id = request.getParameter("contact_id");
@@ -59,20 +69,28 @@ public class ControllerServlet extends HttpServlet {
                 // on RECHARGE LA PAGE D'ACCUEIL
                 response.sendRedirect("ControllerServlet");
             }
+
+
+
+            //Ajouter
         } else if (do_this.equals("create")) {
             // RÉCUPÉRATION des informations du CONTACT
+            String id = request.getParameter("contact_id");
+            String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
-            if (lastName == null) {
-                // redirection sur LA PAGE REMOVECONTACT.JSP
-                response.sendRedirect("addContact.jsp");
-            } else {
-                // TODO le nom n'est PAS nul, donc on AJOUTE le CONTACT DANS LA BASE
-                Contact newContact = new Contact(0, "", lastName, "", "", ""); // Création d'un nouveau contact avec des valeurs par défaut
-                contactFacade.createContact(newContact); // Utilisation de la variable contactFacade
-                // on RECHARGE LA PAGE D'ACCUEIL
-                response.sendRedirect("ControllerServlet");
-            }
-        } else if (do_this.equals("update")) {
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            // TODO les paramètres ne sont PAS nuls ou vides, donc on AJOUTE le CONTACT DANS LA BASE
+            Contact newContact = new Contact(0, firstName, lastName, email, phone, address);
+            // Utilisation de la variable contactFacade pour ajouter le contact dans la base de données
+            contactFacade.createContact(newContact);
+            // on RECHARGE LA PAGE D'ACCUEIL
+            response.sendRedirect("ControllerServlet");
+
+
+
+    } else if (do_this.equals("update")) {
             String id = request.getParameter("contact_id");
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
@@ -90,6 +108,10 @@ public class ControllerServlet extends HttpServlet {
                 // Vous pouvez rediriger vers une page d'erreur ou faire autre chose
             }
         }
+
+
+
+        // rechercher
          else if (do_this.equals("search")) {
         String searchKeyword = request.getParameter("searchKeyword");
 
@@ -105,7 +127,10 @@ public class ControllerServlet extends HttpServlet {
         }
     }
 
-    // TODO ...
+
+
+
+
     }
 
 }
