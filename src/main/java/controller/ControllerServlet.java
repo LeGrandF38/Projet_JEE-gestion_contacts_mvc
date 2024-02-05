@@ -32,12 +32,8 @@ public class ControllerServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // INSTANCIATION DE L’OBJET CONTACTFACADE
-        // À FAIRE : Remplacez ContactFacadeImpl par le nom de votre classe d'implémentation
         Contact contactFacade = new Contact();
-
-        // RÉCUPÉRATION de L'ACTION À effectuer
-        String do_this = request.getParameter("do_this"); // Utilisation de la méthode correcte getRequestParameter
+        String do_this = request.getParameter("do_this");
 
 
 
@@ -55,7 +51,7 @@ public class ControllerServlet extends HttpServlet {
 
 
 
-            //Suppreimer
+            //Suprimer
         } else if (do_this.equals("delete")) {
             // RÉCUPÉRATION de l'id du CONTACT
             String id = request.getParameter("contact_id");
@@ -111,21 +107,7 @@ public class ControllerServlet extends HttpServlet {
 
 
 
-        // rechercher
-         else if (do_this.equals("search")) {
-        String searchKeyword = request.getParameter("searchKeyword");
 
-        if (searchKeyword != null && !searchKeyword.isEmpty()) {
-            List<Contact> searchResults = contactFacade.searchContacts(searchKeyword);
-            request.setAttribute("SEARCHRESULTS", searchResults);
-            ServletContext sc = getServletContext();
-            RequestDispatcher rd = sc.getRequestDispatcher("/searchResults.jsp");
-            rd.forward(request, response);
-        } else {
-            // Gérer le cas où le mot-clé de recherche n'est pas fourni
-            // Vous pouvez rediriger vers une page d'erreur ou faire autre chose
-        }
-    }
 
 
 

@@ -82,61 +82,6 @@ public class Contact implements FacadeContact {
         }
     }
 
-    @Override
-    public List<Contact> searchContacts(String keyword) {
-        List<Contact> searchResults = new ArrayList<>();
-
-        try (Connection conn = ConnexionBD.getConnection();
-             PreparedStatement stm = conn.prepareStatement(
-                     "SELECT * FROM contacts WHERE FIRSTNAME LIKE ? OR LASTNAME LIKE ? OR ADDRESS LIKE ?")) {
-
-            stm.setString(1, "%" + keyword + "%"); // Recherche par prénom
-            stm.setString(2, "%" + keyword + "%"); // Recherche par nom
-            stm.setString(3, "%" + keyword + "%"); // Recherche par adresse
-
-            try (ResultSet rs = stm.executeQuery()) {
-                while (rs.next()) {
-                    int id = rs.getInt("ID_CONTACT");
-                    String firstname = rs.getString("FIRSTNAME");
-                    String lastname = rs.getString("LASTNAME");
-                    String email = rs.getString("EMAIL");
-                    String phone = rs.getString("PHONE");
-                    String address = rs.getString("ADDRESS");
-
-                    Contact contact = new Contact(id, firstname, lastname, email, phone, address);
-                    searchResults.add(contact);
-                }
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return searchResults;
-    }
-
-
-
-
-
-
-    @Override
-    public void deleteContact(int id) {
-        try (Connection conn = ConnexionBD.getConnection();
-             PreparedStatement stm = conn.prepareStatement("DELETE FROM contact WHERE ID_CONTACT = ?")) {
-            stm.setInt(1, id);
-            stm.executeUpdate();
-            System.out.println("Execution ok");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
 
     @Override
     public List<Contact> findAll() {
@@ -166,6 +111,86 @@ public class Contact implements FacadeContact {
     }
 
     @Override
+    public int[] getAllId_Contacts() {
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement stm = conn.prepareStatement("SELECT ID_CONTACT FROM contact");
+             ResultSet rs = stm.executeQuery()) {
+
+            List<Integer> contactIds = new ArrayList<>();
+            while (rs.next()) {
+                int id = rs.getInt("ID_CONTACT");
+                contactIds.add(id);
+            }
+
+            int[] result = new int[contactIds.size()];
+            for (int i = 0; i < contactIds.size(); i++) {
+                result[i] = contactIds.get(i);
+            }
+
+            return result;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return new int[0]; // handle the exception as needed
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    @Override
+    public Contact getById(int id) {
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement stm = conn.prepareStatement("SELECT * FROM contact WHERE ID_CONTACT = ?");
+        ) {
+            stm.setInt(1, id);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    String firstname = rs.getString("FIRSTNAME");
+                    String lastname = rs.getString("LASTNAME");
+                    String email = rs.getString("EMAIL");
+                    String phone = rs.getString("PHONE");
+                    String address = rs.getString("ADDRESS");
+
+                    return new Contact(id, firstname, lastname, email, phone, address);
+                } else {
+                    System.out.println("Contact not found with ID: " + id);
+                    return null; // or throw an exception if not found
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null; // handle the exception as needed
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+    @Override
+    public void deleteContact(int id) {
+        try (Connection conn = ConnexionBD.getConnection();
+             PreparedStatement stm = conn.prepareStatement("DELETE FROM contact WHERE ID_CONTACT = ?")) {
+            stm.setInt(1, id);
+            stm.executeUpdate();
+            System.out.println("Execution ok");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
+
+
+
+    @Override
     public void updateContact(Contact newc) {
         try (Connection conn = ConnexionBD.getConnection();
              PreparedStatement stm = conn.prepareStatement(
@@ -189,58 +214,7 @@ public class Contact implements FacadeContact {
 
 
 
-    @Override
-    public int[] getAllIdContacts() {
-        List<Integer> ids = new ArrayList<>();
-        try (Connection conn = ConnexionBD.getConnection();
-             PreparedStatement stm = conn.prepareStatement("SELECT ID_CONTACT FROM contact");
-             ResultSet rs = stm.executeQuery()) {
 
-            while (rs.next()) {
-                ids.add(rs.getInt("ID_CONTACT"));
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        // Convertir la liste d'Integer en tableau d'int
-        int[] result = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            result[i] = ids.get(i);
-        }
-
-        return result;
-    }
-
-
-    @Override
-    public Contact getById(int id) {
-        Contact contact = null;
-        try (Connection conn = ConnexionBD.getConnection();
-             PreparedStatement stm = conn.prepareStatement("SELECT * FROM contact WHERE ID_CONTACT=?")) {
-            stm.setInt(1, id);
-            try (ResultSet rs = stm.executeQuery()) {
-                if (rs.next()) {
-                    String firstname = rs.getString("FIRSTNAME");
-                    String lastname = rs.getString("LASTNAME");
-                    String email = rs.getString("EMAIL");
-                    String phone = rs.getString("PHONE");
-                    String address = rs.getString("ADDRESS");
-
-                    contact = new Contact(id, firstname, lastname, email, phone, address);
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        return contact;
-    }
 
     @Override
     public String toString() {

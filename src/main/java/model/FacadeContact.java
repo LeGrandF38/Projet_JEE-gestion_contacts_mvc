@@ -7,7 +7,7 @@ public interface FacadeContact {
     public void deleteContact(int id);
     public void updateContact(Contact newc);
     public List<Contact> findAll();
-    public int [] getAllIdContacts();
+    public int [] getAllId_Contacts();
     public Contact getById(int id);
-    public List<Contact> searchContacts(String keyword);
+
 }
